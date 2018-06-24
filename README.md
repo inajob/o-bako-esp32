@@ -166,6 +166,8 @@ WebUIからはまだアップロードできないので例えばcurlを使っ�
 $ curl --data-urlencode "body@<filename>.bmp" http://<o-bako-ip-address>/file/<gamename>/sprite.bmp
 ```
 
+このリポジトリの`example/`にm5stackでも動作するゲームの例があります。参考にしてみてください。
+
 # WiFi STAモードのための設定
 
 まずはAPモードでWiFiを起動します。ランチャーのutilタブからself wifi onを選択してください。
