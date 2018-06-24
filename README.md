@@ -1,11 +1,13 @@
-# o-bako in esp32
+# o-bako esp32
 
 [o-bako](https://inajob.github.io/o-bako-simulator/index.html)のESP32バージョンです。
 
 o-bakoはLuaで記述するゲーム開発プラットフォームです。
 ブラウザでゲームを開発し、そのままのソースコードがゲーム機上でも動作するのが特徴です。
 
-o-bako in esp32 はo-bakoのESP32実装です。
+o-bako-esp32 はo-bakoのESP32実装です。
+
+<img src="imgs/dia.png">
 
 # ターゲットボード
 
@@ -13,12 +15,14 @@ o-bako in esp32 はo-bakoのESP32実装です。
 ESP32-DevKitCを使った自作基板です。
 詳細は後日公開予定です。
 
-## m5stack
+## M5Stack
 
 M5Stack Basicで動作確認しています。
 facesには未対応ですが、対応予定です。
 
-本来o-bakoは十字キー + A,B,Cボタンを想定していますが、M5Stack Basicには3つしかボタンがないため 下,C,右ボタンのみが有効です。
+本来o-bakoは十字キー + Start,1,2ボタンを想定していますが、M5Stack Basicには3つしかボタンがないため 下,Start,右ボタンのみが有効です。
+
+<img src="imgs/key.png">
 
 # ビルド環境
 [platformio](https://platformio.org/)を利用しています
@@ -85,6 +89,8 @@ $
 
 実行が終わると、転送したプログラムが実行されます。
 以降は電源を入れると、/init/main.luaが実行されます。
+
+<img src="imgs/launcher.jpg">
 
 # ランチャーの使い方
 
