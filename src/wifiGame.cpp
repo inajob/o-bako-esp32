@@ -71,8 +71,11 @@ String WifiGame::randomString(String prefix, int n){
 void WifiGame::initAP(){
   WiFi.disconnect(true);
   String ssid = randomString("o-bako-", 5);
-  String password = randomString("", 5);
-  WiFi.softAP(ssid.c_str(), password.c_str());
+  String password = randomString("", 8);
+  bool result = WiFi.softAP(ssid.c_str(), password.c_str());
+  if(!result){
+    Serial.println("error softAP");
+  }
 
   IPAddress ip(192,168,0,1);
   IPAddress subnet(255,255,255,0);
