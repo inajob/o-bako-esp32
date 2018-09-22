@@ -44,6 +44,13 @@ function loop()
      text("wifi: off", 0, 0)
    end
 
+   if btn(0) == 2 then
+     tabCursor = tabCursor - 1
+     if tabCursor < 0 then
+       tabCursor = 1
+     end
+     cursor = 0
+   end
    if btn(1) == 2 then
      tabCursor = tabCursor + 1
      if tabCursor > 1 then
@@ -51,6 +58,8 @@ function loop()
      end
      cursor = 0
    end
+
+
 
    drawTile(0,18,16,14)
 
@@ -76,6 +85,13 @@ function drawFile()
    end
    spr(0, 20 + cursor*10, 8, 8, 32, 16, 8, 8)
 
+   if btn(2) == 2 then
+     cursor = cursor - 1
+     if cursor < 0 then
+       cursor = #fs
+     end
+   end
+
    if btn(3) == 2 then
      cursor = cursor + 1
      if cursor > #fs then
@@ -83,7 +99,7 @@ function drawFile()
      end
    end
 
-   if btn(4) == 2 then
+   if btn(5) == 2 then
      run(fs[cursor])
    end
 end
@@ -104,6 +120,13 @@ function drawUtil()
    --fillrect(0, 20 + cursor * 10, 10, 10)
    spr(0, 20 + cursor*10, 8, 8, 32, 16, 8, 8)
 
+   if btn(2) == 2 then
+     cursor = cursor - 1
+     if cursor < 0 then
+       cursor = #utilMenu - 1
+     end
+   end
+
    if btn(3) == 2 then
      cursor = cursor + 1
      if cursor >= #utilMenu then
@@ -111,7 +134,7 @@ function drawUtil()
      end
    end
 
-   if btn(4) == 2 then
+   if btn(5) == 2 then
      if cursor == 0 then
        run("/init/main.lua")
      elseif cursor == 1 then
