@@ -299,6 +299,39 @@ int RunGame::l_list(lua_State* L){
   }
   return 1;
 }
+int RunGame::l_require(lua_State* L){
+  bool loadError = false;
+  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+  const char* fname = lua_tostring(L, 1);
+  File fp = SPIFFS.open(fname, FILE_READ);
+
+  struct LoadF lf;
+  lf.f = fp;
+  char cFileName[32];
+  fileName.toCharArray(cFileName, 32);
+  if(lua_load(L, getF, &lf, cFileName, NULL)){
+    printf("error? %s\n", lua_tostring(L, -1));
+    Serial.printf("error? %s\n", lua_tostring(L, -1));
+    //runError = true;
+    //errorString = lua_tostring(L, -1);
+    loadError = true;
+  }
+  fp.close();
+
+  if(loadError == false){
+    if(lua_pcall(L, 0, 1, 0)){
+      Serial.printf("init error? %s\n", lua_tostring(L, -1));
+      //runError = true;
+      //errorString = lua_tostring(L, -1);
+    }
+  }
+
+  Serial.println("finish require");
+
+
+  return 1;
+}
+
 int RunGame::l_reboot(lua_State* L){
   RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
 
@@ -390,6 +423,11 @@ void RunGame::resume(){
   lua_pushcclosure(L, l_reboot, 1);
   lua_setglobal(L, "reboot");
 
+  lua_pushlightuserdata(L, this);
+  lua_pushcclosure(L, l_require, 1);
+  lua_setglobal(L, "require");
+
+
   SPIFFS.begin(true);
 
   File bmpFile = SPIFFS.open(getBitmapName(fileName) , FILE_READ);
@@ -419,7 +457,7 @@ void RunGame::resume(){
   fp.close();
 
   if(runError == false){
-    if(lua_pcall(L, 0, 0, 0)){
+    if(lua_pcall(L, 0, 0,0)){
       Serial.printf("init error? %s\n", lua_tostring(L, -1));
       runError = true;
       errorString = lua_tostring(L, -1);

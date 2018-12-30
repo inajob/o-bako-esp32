@@ -74,6 +74,7 @@ class RunGame: public BaseGame
     static int l_wifiserve(lua_State* L);
     static int l_run(lua_State* L);
     static int l_list(lua_State* L);
+    static int l_require(lua_State* L);
     static int l_reboot(lua_State* L);
     String getBitmapName(String s);
     void init();
