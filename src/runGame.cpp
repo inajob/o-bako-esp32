@@ -332,6 +332,38 @@ int RunGame::l_require(lua_State* L){
   return 1;
 }
 
+int RunGame::l_httpsget(lua_State* L){
+  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+  const char* host = lua_tostring(L, 1);
+  const char* path = lua_tostring(L, 2);
+  WiFiClientSecure client;
+  const int httpsPort = 443;
+  if(!client.connect(host, httpsPort)){
+    // connection failed
+    Serial.println("connect failed");
+  }
+  client.print(String("GET ") + path + " HTTP/1.1\r\n" +
+    "Host: " + host + "\r\n" +
+    "User-Agent: o-bako\r\n" +
+    "Connection: close\r\n\r\n"
+  );
+  String line;
+  while(client.connected()){
+    line = client.readStringUntil('\n');
+    if(line == "\r"){
+      // headers recieved
+      Serial.println("headers recieved");
+      break;
+    }
+  }
+  line = client.readString();
+  int lineLength = line.length();
+  const char *lineChar = line.c_str();
+
+  lua_pushstring(L, lineChar);
+  return 1;
+}
+
 int RunGame::l_reboot(lua_State* L){
   RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
 
@@ -426,6 +458,10 @@ void RunGame::resume(){
   lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_require, 1);
   lua_setglobal(L, "require");
+
+  lua_pushlightuserdata(L, this);
+  lua_pushcclosure(L, l_httpsget, 1);
+  lua_setglobal(L, "httpsget");
 
 
   SPIFFS.begin(true);
