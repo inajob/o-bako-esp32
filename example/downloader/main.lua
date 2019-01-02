@@ -1,4 +1,4 @@
-json = require("/downloader/json.lua")
+json = require("/load-test/test.lua")
 
 M_INIT = 0
 M_FETCH = 1
@@ -92,4 +92,29 @@ function loop()
     end
     drawGameList(0, 16, gameList, cursor)
   elseif mode == M_FETCHGAMEINFO then
-
+    gameInfo = fetchGameInfo(gameName)
+    mode = M_GAMEINFO
+  elseif mode == M_GAMEINFO then
+    cls()
+    color(0,30,0)
+    fillrect(4,4,128-4,128-4)
+    color(0,255,0)
+    drawrect(4,4,128-4,128-4)
+    drawGameInfo(8,8, gameInfo)
+    if btn(5) == 2 then
+      mode = M_GAMEDL
+      files = gameInfo["files"]
+      drawStatusText("Game download...")
+    end
+    if btn(6) == 2 then
+      mode = M_GAMELIST
+    end
+  elseif mode == M_GAMEDL then
+    head = table.remove(files, 1)
+    drawStatusText("download..." .. head)
+    storeFile(gameName, head)
+    if #files == 0 then
+      mode = M_GAMELIST
+    end
+  end
+end
