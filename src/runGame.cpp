@@ -5,6 +5,7 @@ extern void startWifiDebug(bool isSelf);
 extern void setFileName(String s);
 extern bool isWifiDebug();
 extern void reboot();
+extern Tunes tunes;
 
 int system(const char* c){
   //none
@@ -364,6 +365,50 @@ int RunGame::l_httpsget(lua_State* L){
   return 1;
 }
 
+int RunGame::l_httpsgetfile(lua_State* L){
+  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+  const char* host = lua_tostring(L, 1);
+  const char* path = lua_tostring(L, 2);
+  const char* filePath = lua_tostring(L, 3);
+  WiFiClientSecure client;
+  const int httpsPort = 443;
+  if(!client.connect(host, httpsPort)){
+    // connection failed
+    Serial.println("connect failed");
+  }
+  client.print(String("GET ") + path + " HTTP/1.1\r\n" +
+    "Host: " + host + "\r\n" +
+    "User-Agent: o-bako\r\n" +
+    "Connection: close\r\n\r\n"
+  );
+  String line;
+  int len = 0;
+  while(client.connected()){
+    line = client.readStringUntil('\n');
+    if(line == "\r"){
+      // headers recieved
+      Serial.println("headers recieved");
+      break;
+    }
+    if(line.startsWith("Content-Length: ")){
+      len = line.substring(16).toInt();
+    }
+
+  }
+
+  tunes.pause();
+  File f = SPIFFS.open(filePath, FILE_WRITE);
+  while(client.available() && len > 0){
+    char c = client.read();
+    f.write(c);
+    len --;
+  }
+  f.close();
+  tunes.resume();
+  return 0;
+}
+
+
 int RunGame::l_reboot(lua_State* L){
   RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
 
@@ -462,6 +507,12 @@ void RunGame::resume(){
   lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_httpsget, 1);
   lua_setglobal(L, "httpsget");
+
+  lua_pushlightuserdata(L, this);
+  lua_pushcclosure(L, l_httpsgetfile, 1);
+  lua_setglobal(L, "httpsgetfile");
+
+
 
 
   SPIFFS.begin(true);
