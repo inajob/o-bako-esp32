@@ -8,6 +8,7 @@ color(0,255,255)
 
 fs = list()
 cursor = 0
+scroll = 0
 tabCursor = 0
 
 function drawTab(x, y, w)
@@ -80,10 +81,13 @@ function drawFile()
    color(0,0,0)
    text("util", 48, 11)
 
-   for i, v in pairs(fs) do
-     text(v, 10, 20 + 10 * i)
+   for i = scroll,#fs do
+     if i - scroll >= 0 and i - scroll <= 10 then
+       v = fs[i]
+       text(i .. v, 10, 20 + 10 * (i-scroll))
+     end
    end
-   spr(0, 20 + cursor*10, 8, 8, 32, 16, 8, 8)
+   spr(0, 20 + (cursor-scroll)*10, 8, 8, 32, 16, 8, 8)
 
    if btn(2) == 2 then
      cursor = cursor - 1
@@ -97,6 +101,13 @@ function drawFile()
      if cursor > #fs then
        cursor = 0
      end
+   end
+
+   if cursor < scroll then
+     scroll = cursor
+   end
+   if cursor > 10 then
+     scroll = cursor - 10
    end
 
    if btn(5) == 2 then
@@ -160,4 +171,3 @@ function drawUtil()
    end
 
 end
-
