@@ -183,13 +183,22 @@ int RunGame::l_pset(lua_State* L){
 }
 int RunGame::l_color(lua_State* L){
   RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
-  int r = lua_tointeger(L, 1);
-  int g = lua_tointeger(L, 2);
-  int b = lua_tointeger(L, 3);
+  int r,g,b;
+  if(lua_gettop(L) == 3){ // from rgb
+    r = lua_tointeger(L, 1);
+    g = lua_tointeger(L, 2);
+    b = lua_tointeger(L, 3);
 
-  self->col[0] = r;
-  self->col[1] = g;
-  self->col[2] = b;
+    self->col[0] = r;
+    self->col[1] = g;
+    self->col[2] = b;
+  }else{ // from palette
+    r = lua_tointeger(L, 1);
+    self->col[0] = ((self->palette[r] >> 11) << 3); // 5bit
+    self->col[1] = (((self->palette[r] >> 5) & 0b111111) << 2); // 6bit
+    self->col[2] = ((self->palette[r] & 0b11111) << 3);       // 5bit
+  }
+
   return 0;
 }
 int RunGame::l_text(lua_State* L){
@@ -606,7 +615,9 @@ int RunGame::run(int remainTime){
       tft.setTextSize(1);
       tft.setTextColor(TFT_WHITE, TFT_BLUE);
       tft.setCursor(0, 0);
+      tft.setTextWrap(true);
       tft.print(errorString);
+      tft.setTextWrap(false);
 
       if(buttonState[5] == 10){ // reload
         return 1;
