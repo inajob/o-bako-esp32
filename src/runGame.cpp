@@ -70,7 +70,7 @@ int RunGame::loadSurface(File *fp, uint8_t* buf){
     return -1;
   }
   Serial.println("pre seek");
-  fp->seek(4 + 2 + 2, SeekCur);
+  fp->seek(4 + 2 + 2, SeekCur); // size, resv1, resv2
   fp->read((uint8_t*)&offset, 4);
 
   fp->read((uint8_t*)&biSize, 4);
@@ -417,6 +417,80 @@ int RunGame::l_httpsgetfile(lua_State* L){
   return 0;
 }
 
+int RunGame::l_savebmp(lua_State* L){
+  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+  const char* path = lua_tostring(L, 1);
+  uint8_t buf[4];
+  long* ltmp = (long*) buf;
+  uint16_t* tmp2 = (uint16_t*)buf;
+  uint8_t tmp1;
+
+  tunes.pause();
+  File f = SPIFFS.open(path, FILE_WRITE);
+  f.write('B');
+  f.write('M');
+  *ltmp = 14 + 40 + 4 * 256;
+  f.write(buf, 4); // file size
+  *tmp2 = 0;
+  f.write(buf, 2); // reserved1
+  f.write(buf, 2); // reserved2
+  *ltmp = 14 + 40 + 4 * 256;
+  f.write(buf, 4); // header size
+
+  // BITMAPCOREHEADER
+  *ltmp = 40;
+  f.write(buf, 4); // bc size
+  *ltmp = 128;
+  f.write(buf, 4); // width
+  f.write(buf, 4); // height
+  *tmp2 = 1;
+  f.write(buf, 2); // planes
+  *tmp2 = 8;
+  f.write(buf, 2); // bitcount
+  *ltmp = 0;
+  f.write(buf,4); // compression
+  *ltmp = 0;
+  f.write(buf,4); // size image
+  *ltmp = 0;
+  f.write(buf,4); // horizon dot/m
+  *ltmp = 0;
+  f.write(buf,4); // vertical dot/m
+  *ltmp = 0;
+  f.write(buf,4); // cir used
+  *ltmp = 0;
+  f.write(buf,4); // cir important
+
+  uint8_t r,g,b;
+  for(unsigned int i = 0; i < 256; i ++){
+    r = ((self->palette[i] >> 11) << 3);
+    g = (((self->palette[i] >> 5) & 0b111111) << 2);
+    b = ((self->palette[i] & 0b11111) << 3);
+    f.write(b);
+    f.write(g);
+    f.write(r);
+    f.write(0); // reserved
+  }
+  int x = 0,y = 127;
+  for(unsigned int i = 0; i < 128*128; i ++){
+    uint16_t d = tft.readPixel(x, y);
+    uint8_t index = 0;
+    for(unsigned int pi = 0; pi < 256; pi ++){
+      if(self->palette[pi] == d){
+        index = pi;
+        break;
+      }
+    }
+    f.write(index);
+    x ++;
+    if(x == 128){
+      x = 0;
+      y --;
+    }
+  }
+  f.close();
+  tunes.resume();
+  return 0;
+}
 
 int RunGame::l_reboot(lua_State* L){
   RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
@@ -521,8 +595,9 @@ void RunGame::resume(){
   lua_pushcclosure(L, l_httpsgetfile, 1);
   lua_setglobal(L, "httpsgetfile");
 
-
-
+  lua_pushlightuserdata(L, this);
+  lua_pushcclosure(L, l_savebmp, 1);
+  lua_setglobal(L, "savebmp");
 
   SPIFFS.begin(true);
 

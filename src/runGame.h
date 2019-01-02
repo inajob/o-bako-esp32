@@ -78,6 +78,7 @@ class RunGame: public BaseGame
     static int l_require(lua_State* L);
     static int l_httpsget(lua_State* L);
     static int l_httpsgetfile(lua_State* L);
+    static int l_savebmp(lua_State* L);
     static int l_reboot(lua_State* L);
     String getBitmapName(String s);
     void init();
