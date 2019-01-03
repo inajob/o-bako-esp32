@@ -181,6 +181,31 @@ int RunGame::l_pset(lua_State* L){
   tft.drawPixel(x, y, rgb24to16(self->col[0], self->col[1], self->col[2]));
   return 0;
 }
+int RunGame::l_pget(lua_State* L){
+  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+  int x = lua_tointeger(L, 1);
+  int y = lua_tointeger(L, 2);
+
+  uint16_t c = tft.readPixel(x, y);
+
+  uint8_t index = 0;
+  for(unsigned int pi = 0; pi < 256; pi ++){
+    if(self->palette[pi] == c){
+      index = pi;
+      break;
+    }
+  }
+  uint8_t r = ((c >> 11) << 3); // 5bit
+  uint8_t g = (((c >> 5) & 0b111111) << 2); // 6bit
+  uint8_t b = ((c & 0b11111) << 3);       // 5bit
+
+  lua_pushinteger(L, (lua_Integer)r);
+  lua_pushinteger(L, (lua_Integer)g);
+  lua_pushinteger(L, (lua_Integer)b);
+  lua_pushinteger(L, (lua_Integer)index);
+  return 4;
+}
+
 int RunGame::l_color(lua_State* L){
   RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
   int r,g,b;
@@ -530,6 +555,10 @@ void RunGame::resume(){
   lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_pset, 1);
   lua_setglobal(L, "pset");
+
+  lua_pushlightuserdata(L, this);
+  lua_pushcclosure(L, l_pget, 1);
+  lua_setglobal(L, "pget");
 
   lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_color, 1);

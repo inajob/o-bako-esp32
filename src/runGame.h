@@ -64,6 +64,7 @@ class RunGame: public BaseGame
     static int l_tone(lua_State* L);
     static int l_spr(lua_State* L);
     static int l_pset(lua_State* L);
+    static int l_pget(lua_State* L);
     static int l_color(lua_State* L);
     static int l_text(lua_State* L);
     static int l_drawrect(lua_State* L);
