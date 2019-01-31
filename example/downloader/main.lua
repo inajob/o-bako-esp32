@@ -1,4 +1,4 @@
-json = require("/load-test/test.lua")
+json = require("/downloader/json.lua")
 
 M_INIT = 0
 M_FETCH = 1
