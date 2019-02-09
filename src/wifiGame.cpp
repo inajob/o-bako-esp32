@@ -1,6 +1,7 @@
 #include "wifiGame.h"
+#include "MyTFT.h"
 extern Tunes tunes;
-extern TFT_eSprite tft;
+extern MyTFT_eSprite tft;
 extern int* buttonState;
 
 void WifiGame::init(bool isSelf){
@@ -42,9 +43,7 @@ int WifiGame::initSTA(){
   tft.print(ssid);
 
 #ifdef M5STACK
-  M5.Lcd.drawRect((320 - 128)/2 - 1,(240 - 128)/2 - 1,128 + 2,128 + 2, WHITE);
-  tft.pushSprite((320 - 128)/2,(240 - 128)/2);
-  M5.update();
+  tft.drawObako();
 #else
   tft.pushSprite(0, 0);
 #endif
