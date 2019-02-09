@@ -78,13 +78,19 @@ function loop()
   elseif mode == M_GAMELIST then
     cls()
     color(0,255,0)
-    if btn(2) == 2 and cursor > 1 then
+    if btn(2) == 2 then
       cursor = cursor - 1
+      if cursor == 0 then
+        cursor = #gameList
+      end
     end
-    if btn(3) == 2 and cursor < #gameList then
+    if btn(3) == 2 then
       cursor = cursor + 1
+      if cursor > #gameList then
+        cursor = 1;
+      end
     end
-    if btn(5) == 2 then
+    if btn(4) == 2 or btn(5) == 2 then
       gameName = gameList[cursor]
       mode = M_FETCHGAMEINFO
       cls()
@@ -101,12 +107,12 @@ function loop()
     color(0,255,0)
     drawrect(4,4,128-4,128-4)
     drawGameInfo(8,8, gameInfo)
-    if btn(5) == 2 then
+    if btn(4) == 2 or btn(5) == 2 then
       mode = M_GAMEDL
       files = gameInfo["files"]
       drawStatusText("Game download...")
     end
-    if btn(6) == 2 then
+    if btn(1) == 2 or btn(6) == 2 then
       mode = M_GAMELIST
     end
   elseif mode == M_GAMEDL then
