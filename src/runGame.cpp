@@ -787,7 +787,7 @@ int RunGame::run(int remainTime){
     }
   }
 
-  /* // show FPS
+  // show FPS
   sprintf(str, "%02dFPS", 1000/remainTime); // FPS
 
   tft.setTextSize(1);
@@ -798,7 +798,6 @@ int RunGame::run(int remainTime){
   sprintf(str, "%02dms", remainTime); // ms
   tft.setCursor(90, 127 - 8);
   tft.print(str);
-  */
 
   int wait = 1000/30 - remainTime;
   if(wait > 0){
