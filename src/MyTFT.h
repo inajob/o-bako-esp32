@@ -4,7 +4,7 @@ class MyTFT_eSPI : public TFT_eSPI {
     };
     void drawObako(uint16_t* data){
       //pushImage(0,0,128,128,data);
-  int32_t x = 0;
+  int32_t x = (320-256)/2;
   int32_t y = 0;
   int32_t w = 128; // o-bako resolution
   int32_t h = 128;

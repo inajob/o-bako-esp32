@@ -30,6 +30,7 @@ void setup(){
   digitalWrite(TFT_BL, HIGH);
   screen.init();
   screen.setRotation(1);
+  screen.fillScreen(TFT_BLACK);
 #else
   screen.init();
   screen.setRotation(0);
