@@ -70,10 +70,10 @@ o-bako-XXXXXXはWiFiのSSIDです。（XXXXXXは実行の度に変わります�
 
 ## ランチャーの書き込み
 
-data/init.sh を実行します。
+example/loader/init.sh を実行します。
 
 ```
-$ cd data
+$ cd example/loader
 $ sh init.sh
 upload /init/sprite.bmp
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
