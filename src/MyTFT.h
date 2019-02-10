@@ -64,6 +64,13 @@ class MyTFT_eSprite : public TFT_eSprite {
     MyTFT_eSprite(MyTFT_eSPI* tft): TFT_eSprite(tft){
       _mytft = tft;
     }
+    void myDrawRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color){
+      drawFastHLine(x, y, w, color);
+      drawFastHLine(x, y + h - 1, w, color);
+      // Avoid drawing corner pixels twice
+      drawFastVLine(x, y+1, h-2, color);
+      drawFastVLine(x + w - 1, y+1, h-2, color);
+    }
     void drawObako(){
       _mytft->drawObako(_img);
     }

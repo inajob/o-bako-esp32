@@ -1,5 +1,6 @@
 #include "runGame.h"
-extern TFT_eSprite tft;
+#include "MyTFT.h"
+extern MyTFT_eSprite tft;
 extern String fileName;
 extern void startWifiDebug(bool isSelf);
 extern void setFileName(String s);
@@ -245,7 +246,7 @@ int RunGame::l_drawrect(lua_State* L){
   int w = lua_tointeger(L, 3);
   int h = lua_tointeger(L, 4);
 
-  tft.drawRect(x, y, w, h, rgb24to16(self->col[0], self->col[1], self->col[2]));
+  tft.myDrawRect(x, y, w, h, rgb24to16(self->col[0], self->col[1], self->col[2]));
   return 0;
 }
 int RunGame::l_fillrect(lua_State* L){
@@ -373,6 +374,8 @@ int RunGame::l_httpsget(lua_State* L){
   const char* path = lua_tostring(L, 2);
   WiFiClientSecure client;
   const int httpsPort = 443;
+  Serial.println(host);
+  Serial.println(path);
   if(!client.connect(host, httpsPort)){
     // connection failed
     Serial.println("connect failed");
@@ -396,6 +399,7 @@ int RunGame::l_httpsget(lua_State* L){
   const char *lineChar = line.c_str();
 
   lua_pushstring(L, lineChar);
+  Serial.println("done");
   return 1;
 }
 
@@ -523,6 +527,13 @@ int RunGame::l_reboot(lua_State* L){
   reboot();
   return 0;
 }
+int RunGame::l_debug(lua_State* L){
+  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+  const char* text = lua_tostring(L, 1);
+
+  Serial.println(text);
+  return 0;
+}
 String RunGame::getBitmapName(String s){
   int p = s.lastIndexOf("/");
   if(p == -1){
@@ -611,6 +622,10 @@ void RunGame::resume(){
   lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_reboot, 1);
   lua_setglobal(L, "reboot");
+
+  lua_pushlightuserdata(L, this);
+  lua_pushcclosure(L, l_debug, 1);
+  lua_setglobal(L, "debug");
 
   lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_require, 1);

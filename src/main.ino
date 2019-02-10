@@ -25,7 +25,7 @@ void setup(){
   Serial.begin(115200);
 
 #ifdef M5STACK
-  M5.begin(false); // LCD disabled
+  M5.begin(false,false,false); // LCD disabled
   pinMode(TFT_BL, OUTPUT);
   digitalWrite(TFT_BL, HIGH);
   screen.init();
