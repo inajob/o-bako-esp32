@@ -54,6 +54,25 @@ M5Stackの場合は[M5Stack-SD-Updater](https://github.com/tobozo/M5Stack-SD-Upd
 
 SPIFFSの `/init/main.lua` `/init/sprite.bmp` を読み込もうとしますが、初期起動時には存在しないためエラー画面になります。
 
+## o-bako通信モード
+
+o-bakoは3つの通信モードがあります
+
+- 通信なしモード
+  - 接続が不要の場合は通信なしモードで十分です
+  - 起動時はこのモードです
+- APモード
+  - o-bako自身が無線LANのアクセスポイントになるモードです
+  - PCはo-bakoに接続できますが、インターネットには接続できません
+  - WiFiの設定や、初期スクリプトの導入で利用するのが良いです
+- STAモード
+  - o-bakoとPCを同じWiFiネットワークに参加させます
+  - 事前にSSIDとパスワードの設定が必要です（後述）
+  - 通常はこちらのモードを使うのが良いです
+
+<img src="imgs/o-bako-mode.png">
+
+
 ## APモードに切り替え
 
 M5Stackの場合、中央のボタンをしばらく押して、メニューを出してください。
