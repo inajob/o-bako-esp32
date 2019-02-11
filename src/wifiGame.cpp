@@ -1,8 +1,11 @@
 #include "wifiGame.h"
 #include "MyTFT.h"
+#include <Preferences.h>
 extern Tunes tunes;
 extern MyTFT_eSprite tft;
 extern int* buttonState;
+
+Preferences preferences;
 
 void WifiGame::init(bool isSelf){
   SPIFFS.begin();
@@ -17,16 +20,10 @@ void WifiGame::init(bool isSelf){
 }
 
 int WifiGame::initSTA(){
-  File f = SPIFFS.open("/setting/wifi.conf");
-  if(!f){
-    Serial.println("wifi conf open error");
-    return -1;
-  }
-  String ssid = f.readStringUntil('\n');
-  ssid.trim();
-  String password = f.readStringUntil('\n');
-  password.trim();
-  f.close();
+  preferences.begin("wifi-config");
+  String ssid = preferences.getString("WIFI_SSID");
+  String password = preferences.getString("WIFI_PASSWD");
+  preferences.end();
 
   WiFi.disconnect(true);
   WiFi.mode(WIFI_STA);
@@ -438,10 +435,9 @@ int WifiGame::run(int remainTime){
             }
             assignSetting(&key, &value, &ssid, &password);
 
-            File f = SPIFFS.open("/setting/wifi.conf" , FILE_WRITE);
-            f.println(ssid);
-            f.println(password);
-            f.close();
+            preferences.begin("wifi-config");
+            preferences.putString("WIFI_SSID", ssid);
+            preferences.putString("WIFI_PASSWD", password);
 
             client.println(ssid);
             client.println(password);
