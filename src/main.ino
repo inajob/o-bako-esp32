@@ -3,6 +3,7 @@
 
 #ifdef M5STACK
 #include "M5Stack.h"
+#include "M5StackUpdater.h"
 #include "MyTFT.h"
 
 MyTFT_eSPI screen = MyTFT_eSPI();
@@ -25,7 +26,17 @@ void setup(){
   Serial.begin(115200);
 
 #ifdef M5STACK
-  M5.begin(false,false,false); // LCD disabled
+
+ pinMode(BUTTON_A_PIN, INPUT_PULLUP);
+ if(digitalRead(BUTTON_A_PIN) == 0) {
+    M5.begin();
+    Wire.begin();
+    Serial.println("Will Load menu binary");
+    updateFromFS(SD);
+    ESP.restart();
+  }
+
+ M5.begin(false,false,false); // LCD disabled
   pinMode(TFT_BL, OUTPUT);
   digitalWrite(TFT_BL, HIGH);
   screen.init();
