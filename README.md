@@ -42,6 +42,11 @@ $ git submodule update --init --recursive
 $ platformio -e m5stack --target=upload
 ```
 
+# M5Stack-SD-Updaterを使った実行
+
+M5Stackの場合は[M5Stack-SD-Updater](https://github.com/tobozo/M5Stack-SD-Updater)が利用できます。
+その際は[o-bako.bin](output/o-bako.bin)をダウンロードしてSDカードに入れてください。
+
 # 初期起動時の作業
 
 SPIFFSの `/init/main.lua` `/init/sprite.bmp` を読み込もうとしますが、初期起動時には存在しないためエラー画面になります。
@@ -189,4 +194,5 @@ https://inajob.github.io/o-bako-simulator/index.html の下のほうにo-bakoで
 - m5stack https://github.com/m5stack/M5Stack
   - TFT_eSPI https://github.com/Bodmer/TFT_eSPI
 - lua https://github.com/lua/lua
+- M5Stack-SD-Updater https://github.com/tobozo/M5Stack-SD-Updater
 
