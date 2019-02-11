@@ -110,7 +110,7 @@ function drawFile()
      scroll = cursor - 10
    end
 
-   if btn(5) == 2 then
+   if btn(5) == 2 or btn(4) == 2 then
      run(fs[cursor])
    end
 end
@@ -145,7 +145,7 @@ function drawUtil()
      end
    end
 
-   if btn(5) == 2 then
+   if btn(5) == 2 or btn(4) == 2 then
      if cursor == 0 then
        run("/init/main.lua")
      elseif cursor == 1 then
