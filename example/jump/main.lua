@@ -37,7 +37,7 @@ function title()
     color(255,255,255)
     text("JUMP", 32, 50)
 
-    if btn(5) == 1 then
+    if btn(5) == 1 or btn(4) == 1 then
         mode = modegame
         enemy = {}
     end
@@ -46,7 +46,7 @@ end
 function over()
     color(255,255,255)
     text("GAME OVER", 32, 50)
-    if btn(5) == 1 then
+    if btn(5) == 1 or btn(4) == 1 then
         mode = modetitle
     end
 end
@@ -55,7 +55,7 @@ function game()
     color(0,0,0)
     fillrect(0,0,128,128)
 
-    if btn(5) == 1 and not(jumpflag) then
+    if (btn(5) == 1 or btn(4) == 1) and not(jumpflag) then
         yv = -7
         jumpflag = true
     end
