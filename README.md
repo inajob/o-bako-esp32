@@ -157,6 +157,8 @@ utilタブでは下記が実行できます
 
 `http://<o-bako-ip-address>/list/` にアクセスするとファイル一覧を見ることができます。
 
+<img src="imgs/o-bako-file-list.png">
+
 - view
   - そのファイルをテキストとして表示します
 - edit
@@ -189,6 +191,8 @@ $ curl --data-urlencode "body@<filename>.bmp" http://<o-bako-ip-address>/file/<g
 まずはAPモードでWiFiを起動します。ランチャーのutilタブからself wifi onを選択してください。
 
 その後ブラウザから`http://192.168.0.1/setting/`にアクセスします。
+
+<img src="imgs/wifi-setting.png">
 
 STAモードで接続したいWiFiのSSIDとパスワードを入力して、送信してください。
 
