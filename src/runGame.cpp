@@ -741,11 +741,11 @@ int RunGame::run(int remainTime){
       if(buttonState[5] == 10){ // reload
         return 1;
       }
-      if(buttonState[4] == 10){ // reload
+      if(buttonState[6] == 10){ // reload
         setFileName("/init/main.lua");
         return 1;
       }
-      if(buttonState[6] == 10){ // reload
+      if(buttonState[4] == 10){ // reload
         wifiMode = SELECT;
       }
     }else{
