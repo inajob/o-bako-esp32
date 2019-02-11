@@ -12,6 +12,9 @@ o-bako-esp32 はo-bakoのESP32実装です。
 # ターゲットボード
 
 ## 自作基板
+
+<img src="imgs/o-bako-board.jpg">
+
 ESP32-DevKitCを使った自作基板です。
 詳細は後日公開予定です。
 
@@ -102,9 +105,10 @@ $
 
 example/downloader/init.sh を実行します。
 
-<img src="imgs/launcher.jpg">
 
 # ランチャーの使い方
+
+<img src="imgs/launcher.jpg">
 
 `/init/main.lua` は上記でランチャーアプリが書き込まれます。
 
