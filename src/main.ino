@@ -10,8 +10,12 @@ MyTFT_eSPI screen = MyTFT_eSPI();
 MyTFT_eSprite tft = MyTFT_eSprite(&screen);
 #else
 #include <TFT_eSPI.h>
-MyTFT_eSPI screen = MyTFT_eSPI();
-MyTFT_eSprite tft = MyTFT_eSprite(&screen);
+#include "MyTFT.h"
+//MyTFT_eSPI screen = MyTFT_eSPI();
+//MyTFT_eSprite tft = MyTFT_eSprite(&screen);
+TFT_eSPI screen = TFT_eSPI();
+TFT_eSprite tft = TFT_eSprite(&screen);
+
 #endif
 
 #include "Tunes.h"
@@ -21,6 +25,13 @@ BaseGame* game;
 String fileName = "/init/main.lua";
 WifiGame* wifiGame = NULL;
 Tunes tunes;
+
+void startWifiDebug(bool isSelf){
+  tunes.pause();
+  wifiGame = new WifiGame();
+  wifiGame->init(isSelf);
+  tunes.resume();
+}
 
 void setup(){
   Serial.begin(115200);
@@ -35,6 +46,16 @@ void setup(){
     updateFromFS(SD);
     ESP.restart();
   }
+
+ /*
+ // my shield
+ pinMode(3, INPUT_PULLUP);
+ pinMode(1, INPUT_PULLUP);
+ pinMode(16, INPUT_PULLUP);
+ pinMode(17, INPUT_PULLUP);
+ pinMode(35, INPUT_PULLUP);
+ pinMode(36, INPUT_PULLUP);
+ */
 
  M5.begin(false,false,false); // LCD disabled
   pinMode(TFT_BL, OUTPUT);
@@ -77,12 +98,6 @@ void setup(){
 
 uint32_t preTime;
 
-void startWifiDebug(bool isSelf){
-  tunes.pause();
-  wifiGame = new WifiGame();
-  wifiGame->init(isSelf);
-  tunes.resume();
-}
 void setFileName(String s){
   fileName = s;
 }
