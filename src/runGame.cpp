@@ -645,16 +645,18 @@ void RunGame::resume(){
 
   SPIFFS.begin(true);
 
-  File bmpFile = SPIFFS.open(getBitmapName(fileName) , FILE_READ);
-  Serial.println("bitmap load begin");
-  if(loadSurface(&bmpFile, (uint8_t*)surface) != 0){
-    printf("bitmap load error");
-    Serial.println("bitmap load error");
-    runError = true;
-    errorString = "bitmap load error fileName=" + getBitmapName(fileName);
+  if(SPIFFS.exists(getBitmapName(fileName))){
+    File bmpFile = SPIFFS.open(getBitmapName(fileName) , FILE_READ);
+    Serial.println("bitmap load begin");
+    if(loadSurface(&bmpFile, (uint8_t*)surface) != 0){
+      printf("bitmap load error");
+      Serial.println("bitmap load error");
+      runError = true;
+      errorString = "bitmap load error fileName=" + getBitmapName(fileName);
+    }
+    Serial.println("bitmap load end");
+    bmpFile.close();
   }
-  Serial.println("bitmap load end");
-  bmpFile.close();
 
   File fp = SPIFFS.open(fileName, FILE_READ);
 
@@ -711,6 +713,16 @@ int RunGame::run(int remainTime){
   btn[4] = !M5.BtnB.isPressed(); // C
   btn[5] = 1; // A
   btn[6] = 1; // B
+  /*
+  btn[0] = digitalRead(1); // left
+  btn[1] = digitalRead(17)&(!M5.BtnA.isPressed()); // right
+  btn[2] = digitalRead(16); // up
+  btn[3] = digitalRead(3)&(!M5.BtnC.isPressed()); // down
+  btn[4] = !M5.BtnB.isPressed(); // C
+  btn[5] = digitalRead(35); // A
+  btn[6] = digitalRead(36); // B
+  */
+
 #else
   btn[0] = digitalRead(39);
   btn[1] = digitalRead(23);
