@@ -19,7 +19,7 @@ TFT_eSprite tft = TFT_eSprite(&screen);
 #endif
 
 #include "Tunes.h"
-#include "runGame.h"
+#include "runLuaGame.h"
 #include "wifiGame.h"
 BaseGame* game;
 String fileName = "/init/main.lua";
@@ -90,7 +90,7 @@ void setup(){
   pinMode(4, INPUT_PULLUP);
 #endif
 
-  game = new RunGame();
+  game = new RunLuaGame();
   game->init();
 
   tunes.init();
@@ -120,7 +120,7 @@ void loop(){
       tunes.pause();
       game->pause();
       free(game);
-      game = new RunGame();
+      game = new RunLuaGame();
       game->init();
       tunes.resume();
     }
@@ -133,7 +133,7 @@ void loop(){
     tunes.pause();
     game->pause();
     free(game);
-    game = new RunGame();
+    game = new RunLuaGame();
     game->init();
     tunes.resume();
   }

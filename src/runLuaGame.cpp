@@ -1,4 +1,4 @@
-#include "runGame.h"
+#include "runLuaGame.h"
 #include "MyTFT.h"
 extern MyTFT_eSprite tft;
 extern String fileName;
@@ -48,7 +48,7 @@ extern "C" {
     return ret;
   }
 }
-int RunGame::loadSurface(File *fp, uint8_t* buf){
+int RunLuaGame::loadSurface(File *fp, uint8_t* buf){
   uint8_t c;
   unsigned long offset;
   unsigned long width, height;
@@ -121,8 +121,8 @@ int RunGame::loadSurface(File *fp, uint8_t* buf){
   }
   return 0;
 }
-int RunGame::l_tone(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_tone(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   int n = lua_tointeger(L, 1);
   int f = lua_tointeger(L, 2);
 
@@ -132,8 +132,8 @@ int RunGame::l_tone(lua_State* L){
   return 0;
 }
 
-int RunGame::l_spr(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_spr(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
 
   int x = lua_tointeger(L, 1);
   int y = lua_tointeger(L, 2);
@@ -174,16 +174,16 @@ int RunGame::l_spr(lua_State* L){
   }
   return 0;
 }
-int RunGame::l_pset(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_pset(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   int x = lua_tointeger(L, 1);
   int y = lua_tointeger(L, 2);
 
   tft.drawPixel(x, y, rgb24to16(self->col[0], self->col[1], self->col[2]));
   return 0;
 }
-int RunGame::l_pget(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_pget(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   int x = lua_tointeger(L, 1);
   int y = lua_tointeger(L, 2);
 
@@ -207,8 +207,8 @@ int RunGame::l_pget(lua_State* L){
   return 4;
 }
 
-int RunGame::l_color(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_color(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   int r,g,b;
   if(lua_gettop(L) == 3){ // from rgb
     r = lua_tointeger(L, 1);
@@ -227,8 +227,8 @@ int RunGame::l_color(lua_State* L){
 
   return 0;
 }
-int RunGame::l_text(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_text(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   const char* text = lua_tostring(L, 1);
   int x = lua_tointeger(L, 2);
   int y = lua_tointeger(L, 3);
@@ -239,8 +239,8 @@ int RunGame::l_text(lua_State* L){
   return 0;
 }
 
-int RunGame::l_drawrect(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_drawrect(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   int x = lua_tointeger(L, 1);
   int y = lua_tointeger(L, 2);
   int w = lua_tointeger(L, 3);
@@ -249,8 +249,8 @@ int RunGame::l_drawrect(lua_State* L){
   tft.myDrawRect(x, y, w, h, rgb24to16(self->col[0], self->col[1], self->col[2]));
   return 0;
 }
-int RunGame::l_fillrect(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_fillrect(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   int x = lua_tointeger(L, 1);
   int y = lua_tointeger(L, 2);
   int w = lua_tointeger(L, 3);
@@ -259,8 +259,8 @@ int RunGame::l_fillrect(lua_State* L){
   tft.fillRect(x, y, w, h, rgb24to16(self->col[0], self->col[1], self->col[2]));
   return 0;
 }
-int RunGame::l_fillcircle(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_fillcircle(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   int x = lua_tointeger(L, 1);
   int y = lua_tointeger(L, 2);
   int r = lua_tointeger(L, 3);
@@ -269,22 +269,22 @@ int RunGame::l_fillcircle(lua_State* L){
   return 0;
 }
 
-int RunGame::l_btn(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_btn(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   int n = lua_tointeger(L, 1);
 
   lua_pushinteger(L, (lua_Integer)self->buttonState[n]);
   return 1;
 }
 
-int RunGame::l_iswifidebug(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_iswifidebug(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
 
   lua_pushboolean(L, isWifiDebug()?1:0);
   return 1;
 }
-int RunGame::l_getip(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_getip(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   char buf[16];
   IPAddress ip = WiFi.localIP();
   if(self->wifiDebugSelf){
@@ -297,8 +297,8 @@ int RunGame::l_getip(lua_State* L){
 }
 
 
-int RunGame::l_wifiserve(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_wifiserve(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   self->wifiDebugSelf = false;
   if(lua_gettop(L) == 1){
     const char* text = lua_tostring(L, 1);
@@ -309,16 +309,16 @@ int RunGame::l_wifiserve(lua_State* L){
   self->wifiDebugRequest = true;
   return 0;
 }
-int RunGame::l_run(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_run(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   const char* file = lua_tostring(L, 1);
 
   setFileName(file);
   self->exitRequest = true;
   return 0;
 }
-int RunGame::l_list(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_list(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   File f;
 
   lua_newtable(L);
@@ -335,9 +335,9 @@ int RunGame::l_list(lua_State* L){
   }
   return 1;
 }
-int RunGame::l_require(lua_State* L){
+int RunLuaGame::l_require(lua_State* L){
   bool loadError = false;
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   const char* fname = lua_tostring(L, 1);
   File fp = SPIFFS.open(fname, FILE_READ);
 
@@ -368,8 +368,8 @@ int RunGame::l_require(lua_State* L){
   return 1;
 }
 
-int RunGame::l_httpsget(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_httpsget(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   const char* host = lua_tostring(L, 1);
   const char* path = lua_tostring(L, 2);
   WiFiClientSecure client;
@@ -403,8 +403,8 @@ int RunGame::l_httpsget(lua_State* L){
   return 1;
 }
 
-int RunGame::l_httpsgetfile(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_httpsgetfile(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   const char* host = lua_tostring(L, 1);
   const char* path = lua_tostring(L, 2);
   const char* filePath = lua_tostring(L, 3);
@@ -446,8 +446,8 @@ int RunGame::l_httpsgetfile(lua_State* L){
   return 0;
 }
 
-int RunGame::l_savebmp(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_savebmp(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   const char* path = lua_tostring(L, 1);
   uint8_t buf[4];
   long* ltmp = (long*) buf;
@@ -521,20 +521,20 @@ int RunGame::l_savebmp(lua_State* L){
   return 0;
 }
 
-int RunGame::l_reboot(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_reboot(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
 
   reboot();
   return 0;
 }
-int RunGame::l_debug(lua_State* L){
-  RunGame* self = (RunGame*)lua_touserdata(L, lua_upvalueindex(1));
+int RunLuaGame::l_debug(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   const char* text = lua_tostring(L, 1);
 
   Serial.println(text);
   return 0;
 }
-String RunGame::getBitmapName(String s){
+String RunLuaGame::getBitmapName(String s){
   int p = s.lastIndexOf("/");
   if(p == -1){
     p = 0;
@@ -542,13 +542,13 @@ String RunGame::getBitmapName(String s){
   return s.substring(0, p) + "/sprite.bmp";
 }
 
-void RunGame::init(){
+void RunLuaGame::init(){
   this->resume();
 }
-void RunGame::pause(){
+void RunLuaGame::pause(){
   lua_close(L);
 }
-void RunGame::resume(){
+void RunLuaGame::resume(){
   char buf[MAX_CHAR];
   char str[100];
 
@@ -689,7 +689,7 @@ void RunGame::resume(){
 
   tft.pushSprite(0, 0);
 }
-int RunGame::run(int remainTime){
+int RunLuaGame::run(int remainTime){
   char str[100];
   char key;
 

@@ -21,8 +21,8 @@ extern "C"{
 #include <lauxlib.h>
 }
 
-#ifndef RUN_GAME_H
-#define RUN_GAME_H
+#ifndef RUN_LUA_GAME_H
+#define RUN_LUA_GAME_H
 
 #define MAX_CHAR 256
 
@@ -36,7 +36,7 @@ inline uint16_t rgb24to16(uint8_t r, uint8_t g, uint8_t b) {
   return tmp; //(tmp >> 8) | (tmp << 8);
 }
 
-class RunGame: public BaseGame
+class RunLuaGame: public BaseGame
 {
   public:
     enum WifiPhase{
