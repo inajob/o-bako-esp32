@@ -20,11 +20,44 @@ TFT_eSprite tft = TFT_eSprite(&screen);
 
 #include "Tunes.h"
 #include "runLuaGame.h"
+#include "runJsGame.h"
 #include "wifiGame.h"
 BaseGame* game;
 String fileName = "/init/main.lua";
 WifiGame* wifiGame = NULL;
 Tunes tunes;
+
+enum struct FileType {
+  LUA,
+  JS,
+  BMP,
+  OTHER
+};
+
+FileType detectFileType(String *fileName){
+  if(fileName->endsWith(".js")){
+    return FileType::JS;
+  }else if(fileName->endsWith(".lua")){
+    return FileType::LUA;
+  }else if(fileName->endsWith(".bmp")){
+    return FileType::BMP;
+  }
+  return FileType::OTHER;
+}
+
+BaseGame* nextGameObject(String* fileName){
+  switch(detectFileType(fileName)){
+    case FileType::JS:  game = new RunJsGame(); break;
+    case FileType::LUA: game = new RunLuaGame(); break;
+    case FileType::BMP: // todo: error
+      game = NULL;
+      break;
+    case FileType::OTHER: // todo: error
+      game = NULL;
+      break;
+  }
+  return game;
+}
 
 void startWifiDebug(bool isSelf){
   tunes.pause();
@@ -90,7 +123,7 @@ void setup(){
   pinMode(4, INPUT_PULLUP);
 #endif
 
-  game = new RunLuaGame();
+  game = nextGameObject(&fileName);
   game->init();
 
   tunes.init();
@@ -114,29 +147,34 @@ void loop(){
   uint32_t remainTime= (now - preTime);
   preTime = now;
 
+  // == wifi task ==
   if(wifiGame){ // debug mode
     int r = wifiGame->run(remainTime);
-    if(r != 0){
+    if(r != 0){ // reload request
       tunes.pause();
       game->pause();
       free(game);
-      game = new RunLuaGame();
+      game = nextGameObject(&fileName);
       game->init();
       tunes.resume();
     }
   }
+  // == tune task ==
   tunes.run();
 
+  // == game task ==
   int mode = game->run(remainTime);
 
-  if(mode != 0){
+  if(mode != 0){ // exit request
     tunes.pause();
     game->pause();
     free(game);
-    game = new RunLuaGame();
+    game = nextGameObject(&fileName);
     game->init();
     tunes.resume();
   }
+
+  // == display update ==
   tft.setCursor(0,120);
   tft.setTextColor(0xffff);
   tft.print(ESP.getFreeHeap());
