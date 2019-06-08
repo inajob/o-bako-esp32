@@ -76,9 +76,9 @@ void Tunes::onTimer(){
   //out += ((osc3 >> 15)&1 == 1)?0:200;
 
   if(d[0] == 0 && d[1] == 0 && d[2] == 0){
-    digitalWrite(DAC_OUT, LOW);
+    digitalWrite(26, LOW);
   }else{
-    dacWrite(DAC_OUT,(out/3+128));
+    dacWrite(26,(out/3+128));
   }
 }
 
@@ -104,6 +104,8 @@ void Tunes::init(){
   timerAlarmWrite(Tunes::timer, 50, true);
   timerAlarmEnable(Tunes::timer);
 
+  pinMode(25, OUTPUT);
+  digitalWrite(25, LOW);
 }
 
 void Tunes::pause(){
