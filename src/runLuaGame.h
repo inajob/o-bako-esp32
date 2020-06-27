@@ -63,6 +63,7 @@ class RunLuaGame: public BaseGame
     int loadSurface(File* fp, uint8_t* buf);
     static int l_tone(lua_State* L);
     static int l_spr(lua_State* L);
+    static int l_scroll(lua_State* L);
     static int l_pset(lua_State* L);
     static int l_pget(lua_State* L);
     static int l_color(lua_State* L);

@@ -174,6 +174,15 @@ int RunLuaGame::l_spr(lua_State* L){
   }
   return 0;
 }
+int RunLuaGame::l_scroll(lua_State* L){
+  RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
+  int x = lua_tointeger(L, 1);
+  int y = lua_tointeger(L, 2);
+
+  tft.scroll(x, y);
+  return 0;
+}
+
 int RunLuaGame::l_pset(lua_State* L){
   RunLuaGame* self = (RunLuaGame*)lua_touserdata(L, lua_upvalueindex(1));
   int x = lua_tointeger(L, 1);
@@ -562,6 +571,10 @@ void RunLuaGame::resume(){
   lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_spr, 1);
   lua_setglobal(L, "spr");
+
+  lua_pushlightuserdata(L, this);
+  lua_pushcclosure(L, l_scroll, 1);
+  lua_setglobal(L, "scroll");
 
   lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_pset, 1);

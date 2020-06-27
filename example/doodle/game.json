@@ -1,0 +1,7 @@
+{
+  "script": "main.lua",
+  "image": "sprite.bmp",
+  "name": "doodle",
+  "authors": ["inajob"],
+  "license": "MIT"
+}
