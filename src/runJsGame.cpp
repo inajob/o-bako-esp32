@@ -96,20 +96,23 @@ duk_ret_t RunJsGame::l_tone(duk_context* ctx){
   return 0;
 }
 
-/*
 int RunJsGame::l_spr(duk_context* ctx){
-  RunJsGame* self = (RunJsGame*)lua_touserdata(L, lua_upvalueindex(1));
+  duk_push_global_object(ctx);          // push global
+  duk_get_prop_string(ctx, -1, "obako");// push obako
+  RunJsGame* self = (RunJsGame*)duk_get_pointer(ctx,-1);
+  duk_pop_2(ctx); // obako, global
 
-  int x = lua_tointeger(L, 1);
-  int y = lua_tointeger(L, 2);
-  int w = lua_tointeger(L, 3);
-  int h = lua_tointeger(L, 4);
-  int sx = lua_tointeger(L, 5);
-  int sy = lua_tointeger(L, 6);
+  int x = duk_get_int(ctx, 0);
+  int y = duk_get_int(ctx, 1);
+  int w = duk_get_int(ctx, 2);
+  int h = duk_get_int(ctx, 3);
+  int sx = duk_get_int(ctx, 4);
+  int sy = duk_get_int(ctx, 5);
+
   int sw = w, sh = h;
-  if(lua_gettop(L) == 8){
-    sw = lua_tointeger(L, 7);
-    sh = lua_tointeger(L, 8);
+  if(duk_get_top(ctx) == 8){ // todo: is this bug?
+    sw = duk_get_int(ctx, 6);
+    sh = (duk_get_int, 7);
   }
   uint8_t index;
 
@@ -139,14 +142,7 @@ int RunJsGame::l_spr(duk_context* ctx){
   }
   return 0;
 }
-int RunJsGame::l_pset(duk_context* ctx){
-  RunJsGame* self = (RunJsGame*)lua_touserdata(L, lua_upvalueindex(1));
-  int x = lua_tointeger(L, 1);
-  int y = lua_tointeger(L, 2);
-
-  tft.drawPixel(x, y, rgb24to16(self->col[0], self->col[1], self->col[2]));
-  return 0;
-}
+/*
 int RunJsGame::l_pget(duk_context* ctx){
   RunJsGame* self = (RunJsGame*)lua_touserdata(L, lua_upvalueindex(1));
   int x = lua_tointeger(L, 1);
@@ -196,6 +192,19 @@ duk_ret_t RunJsGame::l_color(duk_context* ctx){
 
   return 0;
 }
+duk_ret_t RunJsGame::l_pset(duk_context* ctx){
+  duk_push_global_object(ctx);          // push global
+  duk_get_prop_string(ctx, -1, "obako");// push obako
+  RunJsGame* self = (RunJsGame*)duk_get_pointer(ctx,-1);
+  duk_pop_2(ctx); // obako, global
+
+  int x = duk_get_int(ctx, 0);
+  int y = duk_get_int(ctx, 1);
+
+  tft.drawPixel(x, y, rgb24to16(self->col[0], self->col[1], self->col[2]));
+  return 0;
+}
+
 duk_ret_t RunJsGame::l_text(duk_context* ctx){
 
   duk_push_global_object(ctx);
@@ -558,17 +567,15 @@ void RunJsGame::resume(){
   lua_setglobal(L, "tone");
 
   lua_pushlightuserdata(L, this);
-  lua_pushcclosure(L, l_spr, 1);
-  lua_setglobal(L, "spr");
-
-  lua_pushlightuserdata(L, this);
-  lua_pushcclosure(L, l_pset, 1);
-  lua_setglobal(L, "pset");
-
-  lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_pget, 1);
   lua_setglobal(L, "pget");
   */
+
+  fidx = duk_push_c_function(ctx, l_spr, 6);
+  duk_put_prop_string(ctx, -2, "spr");
+
+  fidx = duk_push_c_function(ctx, l_pset, 2);
+  duk_put_prop_string(ctx, -2, "pset");
 
   fidx = duk_push_c_function(ctx, l_color, 3);
   duk_put_prop_string(ctx, -2, "color");
@@ -583,10 +590,6 @@ void RunJsGame::resume(){
   duk_put_prop_string(ctx, -2, "fillrect");
 
   /*
-  lua_pushlightuserdata(L, this);
-  lua_pushcclosure(L, l_fillrect, 1);
-  lua_setglobal(L, "fillrect");
-
   lua_pushlightuserdata(L, this);
   lua_pushcclosure(L, l_fillcircle, 1);
   lua_setglobal(L, "fillcircle");

@@ -16,12 +16,6 @@
 
 #include "runLuaGame.h"
 
-//extern "C"{
-//#include <lua.h>
-//#include <lualib.h>
-//#include <lauxlib.h>
-//}
-
 #include <duk_config.h>
 #include <duktape.h>
 
@@ -40,7 +34,6 @@ class RunJsGame: public BaseGame
       RUN
     };
 
-
     duk_context* ctx;
     byte col[3] = {0,0,0};
     int buttonState[7];
@@ -56,9 +49,9 @@ class RunJsGame: public BaseGame
 
     int loadSurface(File* fp, uint8_t* buf);
     static int l_tone(duk_context* ctx);
-    /*
     static int l_spr(duk_context* ctx);
     static int l_pset(duk_context* ctx);
+    /*
     static int l_pget(duk_context* ctx);
     */
     static int l_color(duk_context* ctx);
