@@ -97,11 +97,10 @@ o-bako-XXXXXXはWiFiのSSIDです。（XXXXXXは実行の度に変わります�
 
 ## ランチャーの書き込み
 
-example/loader/init.sh を実行します。
+example/upload.sh を実行します。
 
 ```
-$ cd example/loader
-$ sh init.sh
+$ example/upload.sh init
 upload /init/sprite.bmp
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -122,7 +121,7 @@ $
 
 このタイミングで入れておくと便利なので、ゲームダウンローダーも入れておきます。
 
-example/downloader/init.sh を実行します。
+example/upload.sh downloader を実行します。
 
 
 # ランチャーの使い方
